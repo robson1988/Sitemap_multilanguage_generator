@@ -7,7 +7,7 @@ if(count($data)> 0 ) {
 echo "<?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'
   xmlns:xhtml='http://www.w3.org/1999/xhtml'>";
-
+  
 	foreach($data as $link) {
 	?>
 				<url>
@@ -64,19 +64,14 @@ echo "<?xml version='1.0' encoding='UTF-8'?>
 				<xhtml:link rel="alternate" hreflang="ru" href="<?php echo $link[4]; ?>"/>
 				<lastmod>2019-12-29</lastmod><changefreq>daily</changefreq><priority>0.5</priority>
 				</url>
-	
-		<?php 
-	
-		echo "</br></br>";	
-	}	
+
+		<?php
+
+		echo "</br></br>";
+	}
 
 
 
 
 echo "</urlset>";
  } else {} ?>
-
-
-
-
-
