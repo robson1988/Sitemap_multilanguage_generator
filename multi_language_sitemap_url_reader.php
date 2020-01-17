@@ -1,77 +1,49 @@
 <?php
 
-$data = array_map('str_getcsv', file('Linki.csv'));
+$data = array_map('str_getcsv', file('Linki.csv', FILE_SKIP_EMPTY_LINES));
 
-if(count($data)> 0 ) {
+$doc = new DOMDocument('1.0');
+$doc->formatOutput=true;
 
-echo "<?xml version='1.0' encoding='UTF-8'?>
-<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'
-  xmlns:xhtml='http://www.w3.org/1999/xhtml'>";
-  
-	foreach($data as $link) {
-	?>
-				<url>
-				<loc><?php echo $link[0]; ?></loc>
-				<xhtml:link rel="canonical" href="<?php echo $link[0]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="pl" href="<?php echo $link[0]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="en" href="<?php echo $link[1]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="de" href="<?php echo $link[2]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="it" href="<?php echo $link[3]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="ru" href="<?php echo $link[4]; ?>"/>
-				<lastmod>2019-12-29</lastmod><changefreq>daily</changefreq><priority>0.5</priority>
-				</url>
-				</br>
-				<url>
-				<loc><?php echo $link[1]; ?></loc>
-				<xhtml:link rel="canonical" href="<?php echo $link[1]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="pl" href="<?php echo $link[0]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="en" href="<?php echo $link[1]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="de" href="<?php echo $link[2]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="it" href="<?php echo $link[3]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="ru" href="<?php echo $link[4]; ?>"/>
-				<lastmod>2019-12-29</lastmod><changefreq>daily</changefreq><priority>0.5</priority>
-				</url>
-				</br>
-				<url>
-				<loc><?php echo $link[2]; ?></loc>
-				<xhtml:link rel="canonical" href="<?php echo $link[2]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="pl" href="<?php echo $link[0]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="en" href="<?php echo $link[1]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="de" href="<?php echo $link[2]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="it" href="<?php echo $link[3]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="ru" href="<?php echo $link[4]; ?>"/>
-				<lastmod>2019-12-29</lastmod><changefreq>daily</changefreq><priority>0.5</priority>
-				</url>
-				</br>
-				<url>
-				<loc><?php echo $link[3]; ?></loc>
-				<xhtml:link rel="canonical" href="<?php echo $link[3]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="pl" href="<?php echo $link[0]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="en" href="<?php echo $link[1]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="de" href="<?php echo $link[2]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="it" href="<?php echo $link[3]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="ru" href="<?php echo $link[4]; ?>"/>
-				<lastmod>2019-12-29</lastmod><changefreq>daily</changefreq><priority>0.5</priority>
-				</url>
-				</br>
-				<url>
-				<loc><?php echo $link[4]; ?></loc>
-				<xhtml:link rel="canonical" href="<?php echo $link[4]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="pl" href="<?php echo $link[0]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="en" href="<?php echo $link[1]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="de" href="<?php echo $link[2]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="it" href="<?php echo $link[3]; ?>"/>
-				<xhtml:link rel="alternate" hreflang="ru" href="<?php echo $link[4]; ?>"/>
-				<lastmod>2019-12-29</lastmod><changefreq>daily</changefreq><priority>0.5</priority>
-				</url>
+$root = $doc->createElement('urlset');
+$doc->appendChild($root);
 
-		<?php
+foreach($data as $z => $link) {
 
-		echo "</br></br>";
+foreach ($link as $y => $value) {
+	if($y == 5) { break;} else {
+
+	if( !isset($link[$z]) ) $link[$z] = '' ;
+
+
+    $url = $doc->createElement('url');
+    $root->appendChild($url);
+
+    $loc = $doc->createElement('loc',$link[$y]);
+    $url->appendChild($loc);
+
+	$xmlink = $doc->createElement('xhtml:link','rel="canonical" href="'.$link[$y].'"/>;');
+	$url->appendChild($xmlink);
+	$xmlink = $doc->createElement('xhtml:link','rel="alternate" hreflang="pl" href="'.$link[0].'"/>;');
+	$url->appendChild($xmlink);
+	$xmlink = $doc->createElement('xhtml:link','rel="alternate" hreflang="en" href="'.$link[1].'"/>;');
+	$url->appendChild($xmlink);
+	$xmlink = $doc->createElement('xhtml:link','rel="alternate" hreflang="de" href="'.$link[2].'"/>;');
+	$url->appendChild($xmlink);
+	$xmlink = $doc->createElement('xhtml:link','rel="alternate" hreflang="it" href="'.$link[3].'"/>;');
+	$url->appendChild($xmlink);
+	$xmlink = $doc->createElement('xhtml:link','rel="alternate" hreflang="ru" href="'.$link[4].'"/>;');
+	$url->appendChild($xmlink);
+
+    $changefreq = $doc->createElement('changefreq','daily');
+    $url->appendChild($changefreq);
+
+    $priority = $doc->createElement('priority',$link[5]);
+    $url->appendChild($priority);
+
 	}
+  }
+}
 
-
-
-
-echo "</urlset>";
- } else {} ?>
+  //Save XML as a file
+  echo $doc->save('sitemap.xml');
